@@ -7,12 +7,11 @@ function NeighborhoodSearch() {
   const [permits, setPermits] = useState([]);
   const [searched, setSearched] = useState(false);
   const [searchSuccessful, setSearchSuccessful] = useState(true);
+  const [filteredPermits, setFilteredPermits] = useState([]);
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  useEffect(() => {
     fetchData();
-    setSearched(true);
-  }
+  }, []);
 
   function fetchData() {
     fetch(
@@ -23,25 +22,26 @@ function NeighborhoodSearch() {
       }
     )
       .then((result) => result.json())
-      .then((data) => setterFunction(data));
+      .then((data) => {
+        setPermits(data.features);
+      });
   }
 
-  const setterFunction = (data) => {
-    console.log(Object.values(data.features));
-    console.log(neighborhood.toUpperCase());
-    const info = data.features.filter(
+  function handleSubmit(event) {
+    event.preventDefault();
+    filterPermits();
+    setSearched(true);
+  }
+
+  function filterPermits() {
+    const filteredPermits = permits.filter(
       (item) =>
         item.properties.Neighborhood === neighborhood.toUpperCase()
     );
 
-    console.log(info);
-    setPermits(info);
-    setSearchSuccessful(info.length > 0);
-  };
-
-  useEffect(() => {
-    console.log(permits);
-  }, [permits]);
+    setSearchSuccessful(filteredPermits.length > 0);
+    setFilteredPermits(filteredPermits);
+  }
 
   return (
     <div>
@@ -63,8 +63,8 @@ function NeighborhoodSearch() {
       {searched && !searchSuccessful && (
         <div>No permits found for the entered neighborhood.</div>
       )}
-      {searchSuccessful && (
-        <NeighborhoodList neighborhood={neighborhood} permits={permits} />
+      {searchSuccessful && filteredPermits.length > 0 && (
+        <NeighborhoodList neighborhood={neighborhood} permits={filteredPermits} />
       )}
     </div>
   );

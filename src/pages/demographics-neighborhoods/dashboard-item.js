@@ -19,6 +19,7 @@ function DashboardItem({neighborhoodData}) {
     return(
         <div>
             <Card className='neighborhood-card'>
+                <Card.Body>
         {Name} has:
         <br /> 
         {Population} Residents
@@ -32,6 +33,7 @@ function DashboardItem({neighborhoodData}) {
         {Native} Native Residents 
         <br /> 
         {Asian} Asian Residents
+        </Card.Body>
         </Card>
         
         <Card className='neighborhood-card'>
