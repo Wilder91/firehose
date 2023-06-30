@@ -8,7 +8,7 @@ function PermitInfo({ permit }) {
     <Card style={{ width: '80rem' }}>
     <div>
         
-      {clipped_permit["Address"]}: {clipped_permit["Description"]}
+      {clipped_permit["Address"]} - {clipped_permit["Description"].charAt(0).toUpperCase() + clipped_permit["Description"].slice(1).toLowerCase()}
       <br />
       Date Issued: {formattedDate}
    

@@ -5,10 +5,13 @@ import NeighborhoodList from "./neighborhood-list";
 function NeighborhoodSearch() {
   const [neighborhood, setNeighborhood] = useState("");
   const [permits, setPermits] = useState([]);
+  const [searched, setSearched] = useState(false);
+  const [searchSuccessful, setSearchSuccessful] = useState(true);
 
   function handleSubmit(event) {
     event.preventDefault();
     fetchData();
+    setSearched(true);
   }
 
   function fetchData() {
@@ -33,6 +36,7 @@ function NeighborhoodSearch() {
 
     console.log(info);
     setPermits(info);
+    setSearchSuccessful(info.length > 0);
   };
 
   useEffect(() => {
@@ -43,11 +47,10 @@ function NeighborhoodSearch() {
     <div>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formProjectName">
-          <Form.Label>Neighborhood</Form.Label>
           <Form.Control
             required
             type="text"
-            placeholder="Enter neighborhood name"
+            placeholder="Neighborhood Name"
             value={neighborhood}
             onChange={(e) => setNeighborhood(e.target.value)}
           />
@@ -57,7 +60,12 @@ function NeighborhoodSearch() {
           Search for Building Permits
         </Button>
       </Form>
-      <NeighborhoodList neighborhood={neighborhood} permits={permits} />
+      {searched && !searchSuccessful && (
+        <div>No permits found for the entered neighborhood.</div>
+      )}
+      {searchSuccessful && (
+        <NeighborhoodList neighborhood={neighborhood} permits={permits} />
+      )}
     </div>
   );
 }
