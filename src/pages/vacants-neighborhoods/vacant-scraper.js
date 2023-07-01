@@ -49,6 +49,13 @@ function VacantScraper() {
     console.log(vacants);
   }, [vacants]);
 
+  function handleClearSearch() {
+    setNeighborhood("");
+    setVacants([]);
+    setSearched(false);
+    setSearchSuccessful(true);
+  }
+
   return (
     <div>
       <Form onSubmit={handleSubmit}>
@@ -65,16 +72,27 @@ function VacantScraper() {
         <Button variant="primary" type="submit">
           Search for Vacant Buildings
         </Button>
+        <Button variant="secondary" onClick={handleClearSearch}>
+          Clear Search
+        </Button>
       </Form>
       {searched && !searchSuccessful && (
         <div>No vacants found for the entered neighborhood.</div>
       )}
-      {searchSuccessful && (
+      {searchSuccessful && searched && (
         <div>
           {neighborhood} has {vacants.length} Vacant Homes
-          {vacants.map((vacant, index) => (
-            <VacantInfo key={index} vacant={vacant}  />
-          ))}
+          {vacants
+            .sort((a, b) => {
+              const streetA = a.properties.Address;
+              const streetB = b.properties.Address;
+              const firstLetterA = streetA.match(/[a-zA-Z]/)[0].toUpperCase();
+              const firstLetterB = streetB.match(/[a-zA-Z]/)[0].toUpperCase();
+              return firstLetterA.localeCompare(firstLetterB);
+            })
+            .map((vacant, index) => (
+              <VacantInfo key={index} vacant={vacant} />
+            ))}
         </div>
       )}
     </div>

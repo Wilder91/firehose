@@ -6,10 +6,18 @@ function DashboardScraper() {
   const [neighborhood, setNeighborhood] = useState("");
   const [neighborhoodData, setNeighborhoodData] = useState([]);
   const [neighborhoodFound, setNeighborhoodFound] = useState(true);
+  const [isCleared, setIsCleared] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true); // Track the initial load
+
+  useEffect(() => {
+    if (initialLoad) {
+      fetchData();
+      setInitialLoad(false); // Update the initial load state to false
+    }
+  }, []);
 
   function handleSubmit(event) {
     event.preventDefault();
-   
     setNeighborhood(neighborhood);
     fetchData();
   }
@@ -30,14 +38,14 @@ function DashboardScraper() {
     const sorted_data = data.features.sort((a, b) => {
       const nameA = a.properties.Name.toLowerCase();
       const nameB = b.properties.Name.toLowerCase();
-  
+
       if (nameA < nameB) return -1;
       if (nameA > nameB) return 1;
       return 0;
     });
-  
+
     console.log(sorted_data);
-  
+
     let formattedNeighborhood;
     if (neighborhood.includes("-")) {
       const words = neighborhood.toLowerCase().split("-");
@@ -50,11 +58,11 @@ function DashboardScraper() {
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
     }
-  
+
     const info = sorted_data.find(
       (item) => item.properties.Name === formattedNeighborhood
     );
-  
+
     if (info) {
       console.log(info);
       setNeighborhoodData(info);
@@ -63,8 +71,13 @@ function DashboardScraper() {
       setNeighborhoodFound(false);
     }
   };
-  
-  
+
+  function handleClear() {
+    setNeighborhood("");
+    setNeighborhoodData([]);
+    setNeighborhoodFound(true);
+    setIsCleared(true);
+  }
 
   useEffect(() => {
     if (neighborhoodData.length !== 0) {
@@ -88,11 +101,14 @@ function DashboardScraper() {
         <Button variant="primary" type="submit">
           Search for Demographic Information
         </Button>
+        <Button variant="secondary" onClick={handleClear}>
+          Clear Search
+        </Button>
       </Form>
       {neighborhoodFound ? (
-        neighborhoodData.length !== 0 && (
+        neighborhoodData.length !== 0 && !isCleared ? (
           <DashboardItem neighborhoodData={neighborhoodData} />
-        )
+        ) : null
       ) : (
         <p>Neighborhood not found. Please try again and make sure you included any appropriate hyphens.</p>
       )}

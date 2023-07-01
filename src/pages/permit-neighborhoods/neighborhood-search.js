@@ -8,6 +8,7 @@ function NeighborhoodSearch() {
   const [searched, setSearched] = useState(false);
   const [searchSuccessful, setSearchSuccessful] = useState(true);
   const [filteredPermits, setFilteredPermits] = useState([]);
+  const [isCleared, setIsCleared] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -31,6 +32,7 @@ function NeighborhoodSearch() {
     event.preventDefault();
     filterPermits();
     setSearched(true);
+    setIsCleared(false);
   }
 
   function filterPermits() {
@@ -41,6 +43,13 @@ function NeighborhoodSearch() {
 
     setSearchSuccessful(filteredPermits.length > 0);
     setFilteredPermits(filteredPermits);
+  }
+
+  function handleClear() {
+    setNeighborhood("");
+    setSearched(false);
+    setSearchSuccessful(true);
+    setIsCleared(true);
   }
 
   return (
@@ -59,11 +68,14 @@ function NeighborhoodSearch() {
         <Button variant="primary" type="submit">
           Search for Building Permits
         </Button>
+        <Button variant="secondary" onClick={handleClear}>
+          Clear Search
+        </Button>
       </Form>
       {searched && !searchSuccessful && (
         <div>No permits found for the entered neighborhood.</div>
       )}
-      {searchSuccessful && filteredPermits.length > 0 && (
+      {searchSuccessful && filteredPermits.length > 0 && !isCleared && (
         <NeighborhoodList neighborhood={neighborhood} permits={filteredPermits} />
       )}
     </div>
