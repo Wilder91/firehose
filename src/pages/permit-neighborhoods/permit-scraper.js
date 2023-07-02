@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
-import NeighborhoodList from "./neighborhood-list";
+import NeighborhoodList from "./permit-list";
 
-function NeighborhoodSearch() {
-  const [neighborhood, setNeighborhood] = useState("");
+function PermitSearch({neighborhood}) {
+  
   const [permits, setPermits] = useState([]);
   const [searched, setSearched] = useState(false);
   const [searchSuccessful, setSearchSuccessful] = useState(true);
@@ -46,7 +46,7 @@ function NeighborhoodSearch() {
   }
 
   function handleClear() {
-    setNeighborhood("");
+    
     setSearched(false);
     setSearchSuccessful(true);
     setIsCleared(true);
@@ -55,15 +55,7 @@ function NeighborhoodSearch() {
   return (
     <div>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formProjectName">
-          <Form.Control
-            required
-            type="text"
-            placeholder="Neighborhood Name"
-            value={neighborhood}
-            onChange={(e) => setNeighborhood(e.target.value)}
-          />
-        </Form.Group>
+    
 
         <Button variant="primary" type="submit">
           Search for Building Permits
@@ -82,4 +74,4 @@ function NeighborhoodSearch() {
   );
 }
 
-export default NeighborhoodSearch;
+export default PermitSearch;

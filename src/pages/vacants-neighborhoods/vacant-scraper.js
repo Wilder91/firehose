@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import VacantInfo from "./vacant-info";
 
-function VacantScraper() {
-  const [neighborhood, setNeighborhood] = useState("");
+function VacantScraper({neighborhood}) {
+ 
   const [vacants, setVacants] = useState([]);
   const [searched, setSearched] = useState(false);
   const [searchSuccessful, setSearchSuccessful] = useState(true);
@@ -50,7 +50,7 @@ function VacantScraper() {
   }, [vacants]);
 
   function handleClearSearch() {
-    setNeighborhood("");
+  
     setVacants([]);
     setSearched(false);
     setSearchSuccessful(true);
@@ -59,15 +59,6 @@ function VacantScraper() {
   return (
     <div>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formProjectName">
-          <Form.Control
-            required
-            type="text"
-            placeholder="Neighborhood Name"
-            value={neighborhood}
-            onChange={(e) => setNeighborhood(e.target.value)}
-          />
-        </Form.Group>
 
         <Button variant="primary" type="submit">
           Search for Vacant Buildings

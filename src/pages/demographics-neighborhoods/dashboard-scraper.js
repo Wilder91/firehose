@@ -2,25 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import DashboardItem from "./dashboard-item";
 
-function DashboardScraper() {
-  const [neighborhood, setNeighborhood] = useState("");
-  const [neighborhoodData, setNeighborhoodData] = useState([]);
+function DashboardScraper({ neighborhood }) {
+  const [neighborhoodData, setNeighborhoodData] = useState(null);
   const [neighborhoodFound, setNeighborhoodFound] = useState(true);
   const [isCleared, setIsCleared] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true); // Track the initial load
+  const [searchAttempted, setSearchAttempted] = useState(false); // Track if a search has been attempted
+  const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (initialLoad) {
-      fetchData();
-      setInitialLoad(false); // Update the initial load state to false
-    }
-  }, []);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    setNeighborhood(neighborhood);
     fetchData();
-  }
+  }, []);
 
   function fetchData() {
     fetch(
@@ -31,21 +23,37 @@ function DashboardScraper() {
       }
     )
       .then((result) => result.json())
-      .then((data) => setterFunction(data));
+      .then((data) => {
+        setData(data);
+        setInitialLoad(false); // Update the initial load state to false
+      });
   }
 
-  const setterFunction = (data) => {
-    const sorted_data = data.features.sort((a, b) => {
-      const nameA = a.properties.Name.toLowerCase();
-      const nameB = b.properties.Name.toLowerCase();
+  function handleSubmit(event) {
+    event.preventDefault();
+    searchNeighborhood();
+    setSearchAttempted(true); // Set searchAttempted to true when a search is made
+  }
 
-      if (nameA < nameB) return -1;
-      if (nameA > nameB) return 1;
-      return 0;
-    });
+  function searchNeighborhood() {
+    if (neighborhood && data) {
+      const formattedNeighborhood = formatNeighborhood(neighborhood);
 
-    console.log(sorted_data);
+      const info = data.features.find(
+        (item) => item.properties.Name === formattedNeighborhood
+      );
 
+      if (info) {
+        console.log(info);
+        setNeighborhoodData(info.properties);
+        setNeighborhoodFound(true);
+      } else {
+        setNeighborhoodFound(false);
+      }
+    }
+  }
+
+  function formatNeighborhood(neighborhood) {
     let formattedNeighborhood;
     if (neighborhood.includes("-")) {
       const words = neighborhood.toLowerCase().split("-");
@@ -58,29 +66,19 @@ function DashboardScraper() {
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
     }
-
-    const info = sorted_data.find(
-      (item) => item.properties.Name === formattedNeighborhood
-    );
-
-    if (info) {
-      console.log(info);
-      setNeighborhoodData(info);
-      setNeighborhoodFound(true);
-    } else {
-      setNeighborhoodFound(false);
-    }
-  };
+    return formattedNeighborhood;
+  }
 
   function handleClear() {
-    setNeighborhood("");
-    setNeighborhoodData([]);
+    setNeighborhoodData(null);
     setNeighborhoodFound(true);
     setIsCleared(true);
+    setSearchAttempted(false);
+    setInitialLoad(true); // Reset initialLoad to true when clearing the search
   }
 
   useEffect(() => {
-    if (neighborhoodData.length !== 0) {
+    if (neighborhoodData) {
       console.log(neighborhoodData);
     }
   }, [neighborhoodData]);
@@ -88,16 +86,6 @@ function DashboardScraper() {
   return (
     <div>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formProjectName">
-          <Form.Control
-            required
-            type="text"
-            placeholder="Neighborhood"
-            value={neighborhood}
-            onChange={(e) => setNeighborhood(e.target.value)}
-          />
-        </Form.Group>
-
         <Button variant="primary" type="submit">
           Search for Demographic Information
         </Button>
@@ -105,12 +93,17 @@ function DashboardScraper() {
           Clear Search
         </Button>
       </Form>
-      {neighborhoodFound ? (
-        neighborhoodData.length !== 0 && !isCleared ? (
-          <DashboardItem neighborhoodData={neighborhoodData} />
-        ) : null
-      ) : (
-        <p>Neighborhood not found. Please try again and make sure you included any appropriate hyphens.</p>
+      {searchAttempted && ( // Display the message only if a search has been attempted
+        neighborhoodFound ? (
+          neighborhoodData && !isCleared ? ( // Check if neighborhoodData is not null before rendering
+            <DashboardItem neighborhoodData={neighborhoodData} />
+          ) : null
+        ) : (
+          <p>
+            Neighborhood not found. Please try again and make sure you included
+            any appropriate hyphens.
+          </p>
+        )
       )}
     </div>
   );

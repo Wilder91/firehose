@@ -7,6 +7,9 @@
   height: 40vmin;
   pointer-events: none;
 }
+.neighborhood-card{
+  border-radius: 10px;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
