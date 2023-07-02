@@ -1,4 +1,4 @@
-Firehose is a react app dashboard for viewing data from various APIs maintained by Baltimore City at https://data.baltimorecity.gov/ 
+Baltimore Index is a react app dashboard for viewing data from various APIs maintained by Baltimore City at https://data.baltimorecity.gov/ 
 It's an ongoing project I'm working on to learn a little bit more about the city and react at the same time. 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
