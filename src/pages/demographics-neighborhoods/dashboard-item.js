@@ -43,7 +43,7 @@ function DashboardItem({ neighborhoodData }) {
         <br />
         {Occupied} Occupied
         <br />
-        {Vacant} Vacant
+        {Vacant} Unoccupied
       </Card>
     </div>
   );
