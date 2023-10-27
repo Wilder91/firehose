@@ -61,7 +61,7 @@ function VacantScraper({neighborhood}) {
       <Form onSubmit={handleSubmit}>
 
         <Button variant="primary" type="submit">
-          Search for Vacant Buildings
+          Search
         </Button>
         <Button variant="secondary" onClick={handleClearSearch}>
           Clear Search

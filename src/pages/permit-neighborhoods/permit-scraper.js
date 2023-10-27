@@ -13,10 +13,9 @@ function PermitSearch({neighborhood}) {
   useEffect(() => {
     fetchData();
   }, []);
-
   function fetchData() {
     fetch(
-      "https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/BuildingPermits/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson",
+      "https://egisdata.baltimorecity.gov/egis/rest/services/Housing/DHCD_Open_Baltimore_Datasets/FeatureServer/3/query?outFields=*&where=1%3D1&f=geojson",
       {
         method: "GET",
         headers: new Headers({}),
@@ -25,8 +24,35 @@ function PermitSearch({neighborhood}) {
       .then((result) => result.json())
       .then((data) => {
         setPermits(data.features);
+        return data; // Return the data for the next `then`
+      })
+      .catch((error) => {
+        // Handle any errors that occurred during the fetch or processing
+        console.error("An error occurred:", error);
       });
   }
+
+  async function upload(permits) {
+    try {
+      const response = await fetch("http://localhost:3000/permits", {
+        method: "POST",
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          permits: permits
+        }),
+      });
+      const result = await response.json();
+      console.log("Success:", result);
+      console.log(permits)
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -43,6 +69,7 @@ function PermitSearch({neighborhood}) {
 
     setSearchSuccessful(filteredPermits.length > 0);
     setFilteredPermits(filteredPermits);
+    upload(permits)
   }
 
   function handleClear() {
@@ -58,7 +85,7 @@ function PermitSearch({neighborhood}) {
     
 
         <Button variant="primary" type="submit">
-          Search for Building Permits
+          Search
         </Button>
         <Button variant="secondary" onClick={handleClear}>
           Clear Search

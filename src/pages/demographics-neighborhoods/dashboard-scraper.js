@@ -87,7 +87,7 @@ function DashboardScraper({ neighborhood }) {
     <div>
       <Form onSubmit={handleSubmit}>
         <Button variant="primary" type="submit">
-          Search for Demographic Information
+          Search
         </Button>
         <Button variant="secondary" onClick={handleClear}>
           Clear Search

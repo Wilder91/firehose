@@ -33,26 +33,26 @@ function App() {
         <br />
         <DropdownButton
           id="scraper-dropdown"
-          title={`Selected Scraper: ${selectedScraper || 'None'}`}
+          title={`${selectedScraper || 'Search Type'}`}
         >
-          <Dropdown.Item onClick={() => handleScraperSelect('NeighborhoodSearch')}>
-            Neighborhood Search
+          <Dropdown.Item onClick={() => handleScraperSelect('Building Permits')}>
+            Building Permits
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleScraperSelect('DashboardScraper')}>
-            Dashboard Scraper
+          <Dropdown.Item onClick={() => handleScraperSelect('Demographics')}>
+            Demographics
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleScraperSelect('VacantScraper')}>
-            Vacant Scraper
+          <Dropdown.Item onClick={() => handleScraperSelect('Vacants')}>
+            Vacant Houses
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleScraperSelect('ThreeOneOneScraper')}>
-            311 Scraper
+          <Dropdown.Item onClick={() => handleScraperSelect('311 Calls')}>
+            311 Calls
           </Dropdown.Item>
         </DropdownButton>
         <br />
-        {selectedScraper === 'NeighborhoodSearch' && <NeighborhoodSearch neighborhood={neighborhood} />}
-        {selectedScraper === 'DashboardScraper' && <DashboardScraper neighborhood={neighborhood} />}
-        {selectedScraper === 'VacantScraper' && <VacantScraper neighborhood={neighborhood} />}
-        {selectedScraper === 'ThreeOneOneScraper' && <ThreeOneOneScraper neighborhood={neighborhood} />}
+        {selectedScraper === 'Building Permits' && <NeighborhoodSearch neighborhood={neighborhood} />}
+        {selectedScraper === 'Demographics' && <DashboardScraper neighborhood={neighborhood} />}
+        {selectedScraper === 'Vacants' && <VacantScraper neighborhood={neighborhood} />}
+        {selectedScraper === '311 Calls' && <ThreeOneOneScraper neighborhood={neighborhood} />}
       </header>
     </div>
   );

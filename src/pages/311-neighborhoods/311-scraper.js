@@ -60,7 +60,7 @@ function Scraper311() {
     <div>
       <Form onSubmit={handleSubmit}>
         <Button variant="primary" type="submit">
-          Search for 311 Data
+          Search
         </Button>
         <Button variant="secondary" onClick={handleClear}>
           Clear Search
